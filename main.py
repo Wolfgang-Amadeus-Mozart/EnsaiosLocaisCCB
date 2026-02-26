@@ -46,7 +46,7 @@ def enviar_email(destinatarios, mensagem_html):
 
 def job():
     hoje = datetime.now().strftime('%Y-%m-%d')
-    df = pd.read_csv('calendario.csv') 
+    df = pd.read_csv('EnsaiosGaurulhos.csv') 
     df['data'] = df['data'].astype(str).str.strip()
     
     eventos_hoje = df[df['data'] == hoje]
