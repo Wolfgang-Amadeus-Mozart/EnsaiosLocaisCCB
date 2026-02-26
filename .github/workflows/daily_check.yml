@@ -5,7 +5,7 @@ on:
     - cron: '0 13 * * *' # Todo dia às 10:00 BRT, horário do github é em UTC
   push:
     branches:
-      - mater # Roda sempre que você der push na main
+      - master # Roda sempre que você der push na main
   workflow_dispatch:
 
 jobs:
