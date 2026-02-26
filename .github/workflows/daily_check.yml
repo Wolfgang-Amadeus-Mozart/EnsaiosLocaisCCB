@@ -2,15 +2,21 @@ name: Automação Ensaios Locais Guarulhos
 
 on:
   schedule:
-    - cron: '0 13 * * *' # Todo dia às 10:00 BRT, horário do github é em UTC
+    - cron: '0 13 * * *' 
   push:
     branches:
-      - master # Roda sempre que você der push na main
+      - master 
   workflow_dispatch:
 
 jobs:
   run-automation:
     runs-on: ubuntu-latest
+    # DEFINA AS CREDENCIAIS AQUI PARA TODO O JOB
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: "us-east-1"
+
     steps:
       - name: Checkout código
         uses: actions/checkout@v3
@@ -23,18 +29,13 @@ jobs:
       - name: Instalar dependências
         run: pip install pandas boto3
 
-      # SÓ RODA O SCRIPT DE E-MAIL SE FOR AGENDADO OU MANUAL
       - name: Executar Script (E-mails)
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: "us-east-1"
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
         run: python main.py
       
-      # SEMPRE RODA O DEPLOY (Tanto no Push quanto no Schedule para garantir o site atualizado)
       - name: Deploy to S3
         run: aws s3 sync ./App s3://ensaios-locais-guarulhos --delete
 
