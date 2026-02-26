@@ -1,10 +1,12 @@
-name: Automação de E-mails Ensaios
+name: Automação Ensaios Locais Guarulhos
 
 on:
   schedule:
-    # Roda todo dia às 09:00 UTC (06:00 em Brasília)
-    - cron: '0 9 * * *'
-  workflow_dispatch: # Permite rodar manualmente para testar
+    - cron: '0 13 * * *' # Todo dia às 10:00 BRT, horário do github é em UTC
+  push:
+    branches:
+      - mater # Roda sempre que você der push na main
+  workflow_dispatch:
 
 jobs:
   run-automation:
@@ -19,16 +21,25 @@ jobs:
           python-version: '3.9'
 
       - name: Instalar dependências
-        run: |
-          pip install pandas boto3
+        run: pip install pandas boto3
 
-      - name: Executar Script
+      # SÓ RODA O SCRIPT DE E-MAIL SE FOR AGENDADO OU MANUAL
+      - name: Executar Script (E-mails)
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         env:
-          # Credenciais AWS para o Boto3 acessar o DynamoDB
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: "us-east-1"
-          # Credenciais de E-mail
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }} # Senha de App do Google
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
         run: python main.py
+      
+      # SEMPRE RODA O DEPLOY (Tanto no Push quanto no Schedule para garantir o site atualizado)
+      - name: Deploy to S3
+        run: aws s3 sync ./App s3://ensaios-locais-guarulhos --delete
+
+      - name: Create CloudFront Invalidation
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} \
+            --paths "/*"

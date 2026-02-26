@@ -2,27 +2,108 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Cadastro de Ensaios - Guarulhos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ensaios Locais - Guarulhos</title>
     <style>
-        body { font-family: sans-serif; display: flex; justify-content: center; padding: 50px; }
-        .form-container { border: 1px solid #ccc; padding: 20px; border-radius: 8px; }
-        input { padding: 8px; margin-right: 10px; border: 1px solid #ddd; border-radius: 4px; }
-        button { padding: 8px 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+        :root {
+            --primary-color: #007bff;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex; 
+            align-items: center;
+            justify-content: center; 
+            padding: 20px; 
+        }
+
+        .form-container { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px; /* Mantém compacto no desktop e centralizado no mobile */
+            text-align: center;
+        }
+
+        h3 { 
+            color: #333; 
+            margin-bottom: 20px; 
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column; /* Coluna no mobile por padrão */
+            gap: 12px;
+        }
+
+        input { 
+            padding: 14px; 
+            border: 2px solid #eee; 
+            border-radius: 8px; 
+            font-size: 16px; /* Evita zoom automático no iOS */
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus { border-color: var(--primary-color); }
+
+        button { 
+            padding: 14px; 
+            cursor: pointer; 
+            background: var(--primary-color); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            font-weight: bold;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        button:active { transform: scale(0.98); }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+
+        #mensagem { 
+            margin-top: 20px; 
+            font-size: 14px; 
+            font-weight: 500;
+            min-height: 20px;
+        }
+
+        /* Responsividade para Telas Maiores (Desktop) */
+        @media (min-width: 480px) {
+            .input-group {
+                flex-direction: row; /* Volta a ser linha em telas maiores */
+            }
+            input { flex: 1; margin-right: 0; }
+        }
     </style>
 </head>
 <body>
 
 <div class="form-container">
-    <h3>Receba notificações dos ensaios</h3>
+    <h3>Ensaios Guarulhos 🔔</h3>
+    <p style="color: #666; margin-bottom: 20px; font-size: 0.9rem;">Receba os avisos de ensaios em guarulhos direto no seu e-mail em dias de ensaio.</p>
+    
     <form id="emailForm">
-        <input type="email" id="emailInput" placeholder="Seu melhor e-mail" required>
-        <button type="submit" id="btnEnviar">Cadastrar</button>
+        <div class="input-group">
+            <input type="email" id="emailInput" placeholder="Seu melhor e-mail" required>
+            <button type="submit" id="btnEnviar">Cadastrar</button>
+        </div>
     </form>
     <p id="mensagem"></p>
 </div>
 
 <script>
-    // Substitua pela URL que aparecerá no seu terminal após o 'terraform apply'
     const API_URL = "https://8v6vbvy0k3.execute-api.us-east-1.amazonaws.com/cadastro";
 
     document.getElementById('emailForm').addEventListener('submit', async (e) => {
@@ -32,30 +113,27 @@
         const mensagem = document.getElementById('mensagem');
         const btn = document.getElementById('btnEnviar');
 
-        // Feedback visual
         btn.disabled = true;
-        mensagem.innerText = "Enviando...";
+        mensagem.style.color = "#666";
+        mensagem.innerText = "⏳ Processando...";
 
         try {
             const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: email })
             });
 
             if (response.ok) {
-                mensagem.style.color = "green";
-                mensagem.innerText = "E-mail cadastrado com sucesso!";
+                mensagem.style.color = "var(--success-color)";
+                mensagem.innerText = "✅ E-mail cadastrado com sucesso!";
                 document.getElementById('emailInput').value = "";
             } else {
-                throw new Error('Erro no servidor');
+                throw new Error();
             }
         } catch (error) {
-            mensagem.style.color = "red";
-            mensagem.innerText = "Erro ao cadastrar. Tente novamente.";
-            console.error(error);
+            mensagem.style.color = "var(--error-color)";
+            mensagem.innerText = "❌ Erro ao cadastrar. Tente novamente.";
         } finally {
             btn.disabled = false;
         }
