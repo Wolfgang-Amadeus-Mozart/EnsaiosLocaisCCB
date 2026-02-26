@@ -42,7 +42,7 @@ def enviar_email(destinatarios, mensagem_corpo):
 def job():
     # 1. Verifica se há evento hoje no seu CSV
     hoje = datetime.now().strftime('%Y-%m-%d')
-    df = pd.read_csv('calendario.csv') # Seu CSV do Colab
+    df = pd.read_csv('EnsaiosGuarulhos.csv') # Seu CSV do Colab
     
     # Filtra eventos para o dia de hoje
     eventos_hoje = df[df['data'] == hoje]
