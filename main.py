@@ -46,50 +46,61 @@ def enviar_email(destinatarios, mensagem_html):
 
 def job():
     hoje = datetime.now().strftime('%Y-%m-%d')
-    df = pd.read_csv('EnsaiosGaurulhos.csv') 
+    df = pd.read_csv('EnsaiosGuarulhos.csv') 
     df['data'] = df['data'].astype(str).str.strip()
     
+    # Filtra TODOS os eventos de hoje
     eventos_hoje = df[df['data'] == hoje]
 
     if not eventos_hoje.empty:
-        evento = eventos_hoje.iloc[0]
-        local = evento['Localidade']
-        hora = evento['Horário']
-        waze = evento['Waze']
+        # Criamos o início do HTML
+        lista_eventos_html = ""
+        
+        # Percorre cada linha de evento encontrada para hoje
+        for index, row in eventos_hoje.iterrows():
+            local = row['Localidade']
+            hora = row['Horário']
+            waze = row['Waze']
+            
+            # Adiciona um bloco para cada ensaio na lista
+            lista_eventos_html += f"""
+            <div style="background-color: #ffffff; padding: 15px; border-radius: 8px; border-left: 5px solid #007bff; margin-bottom: 20px; border-right: 1px solid #eee; border-top: 1px solid #eee; border-bottom: 1px solid #eee;">
+                <p style="margin: 5px 0;">📍 <b>Local:</b> {local}</p>
+                <p style="margin: 5px 0;">⏰ <b>Horário:</b> {hora}</p>
+                <p style="margin: 10px 0 0 0;">
+                    <a href="{waze}" style="color: #007bff; text-decoration: none; font-weight: bold;">🚗 Abrir no Waze</a>
+                </p>
+            </div>
+            """
 
-        # Montando o corpo HTML aqui no job
+        # Monta o corpo final com a lista de eventos dentro
         corpo_html = f"""
         <html>
-            <body style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-            <div style="max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; padding: 20px; background-color: #f9f9f9;">
-            <h2 style="color: #007bff; text-align: center;">📢 Lembrete de Ensaio</h2>
-            <p>Olá! Passando para avisar que <b>hoje</b> temos ensaio agendado:</p>
-            
-            <div style="background-color: #fff; padding: 15px; border-radius: 8px; border-left: 5px solid #007bff; margin: 20px 0;">
-                <p style="margin: 5px 0;"><b>📍 Localidade:</b> {local}</p>
-                <p style="margin: 5px 0;"><b>⏰ Horário:</b> {hora}</p>
-            </div>
-
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="{waze}" style="background-color: #007bff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                🗺️ Abrir no Waze
-                </a>
-            </div>
-            
-            <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;">
-            <p style="font-size: 12px; color: #777; text-align: center;">
+          <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #333; background-color: #f4f4f4; padding: 20px;">
+            <div style="max-width: 600px; margin: auto; background-color: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+              <h2 style="color: #007bff; text-align: center;">📢 Ensaios de Hoje em Guarulhos</h2>
+              <p style="text-align: center; color: #666;">Identificamos os seguintes eventos para hoje, dia {datetime.now().strftime('%d/%m/%Y')}:</p>
+              
+              {lista_eventos_html}
+              
+              <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+              <p style="font-size: 12px; color: #999; text-align: center;">
                 Este é um aviso automático do sistema Ensaios Guarulhos, desenvolvido por Filipe Queiroz de Abreu, do parque santos dumont.<br>
                 Deus abençoe!
-            </p>
+              </p>
             </div>
-        </body>
+          </body>
         </html>
-    """
+        """
         
         lista_emails = buscar_emails_dynamo()
         
         if lista_emails:
             enviar_email(lista_emails, corpo_html)
+        else:
+            print("Nenhum e-mail cadastrado no banco.")
+    else:
+        print(f"Nenhum evento agendado para hoje ({hoje}).")
 
 if __name__ == "__main__":
     job()
