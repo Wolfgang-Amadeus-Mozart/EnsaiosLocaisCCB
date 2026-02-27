@@ -1,8 +1,4 @@
-# 📰 News Ops - Automated Static Site Deployment
-
-
-
-# 🎼 Automação Ensaios Locais Guarulhos
+# 🎼 Automação - Notificação de Ensaios Locais em Guarulhos da Congregação Cristã no Brasil
 
 **Language / Idioma**: [🇺🇸 English](#-project-overview) | [🇧🇷 Português](#-visão-geral-do-projeto)
 
@@ -14,7 +10,7 @@
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 ![Amazon DynamoDB](https://img.shields.io/badge/Amazon%20DynamoDB-4053D6?style=for-the-badge&logo=amazondynamodb&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-[Amazon CloudFront](https://img.shields.io/badge/Amazon%20CloudFront-FF9900?style=for-the-badge&logo=amazoncloudfront&logoColor=white) 
+![Amazon CloudFront](https://img.shields.io/badge/Amazon%20CloudFront-FF9900?style=for-the-badge&logo=amazoncloudfront&logoColor=white) 
 
 </div>
 
