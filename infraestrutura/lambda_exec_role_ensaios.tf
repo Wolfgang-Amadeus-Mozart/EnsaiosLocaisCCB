@@ -30,7 +30,7 @@ resource "aws_iam_role_policy" "dynamo_write_policy" {
       Resource = "${aws_dynamodb_table.EmailsEnsaiosLocaisGuarulhos.arn}"
     },
     {
-      # Permite que a Lambda grave logs para cê debugar se algo der errado
+      # Permite que a Lambda grave logs
       Action = [
         "logs:CreateLogGroup",
         "logs:CreateLogStream",

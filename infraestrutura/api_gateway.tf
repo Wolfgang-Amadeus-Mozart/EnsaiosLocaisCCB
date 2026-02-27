@@ -1,9 +1,8 @@
-# 1. Cria a API HTTP
 resource "aws_apigatewayv2_api" "lambda_api" {
   name          = "api-ensaios-locais"
   protocol_type = "HTTP"
   
-  # Configuração de CORS para permitir que seu site envie dados
+  # Configuração de CORS para permitir envio de dados
   cors_configuration {
     allow_origins = ["*"] # Em produção, coloque o domínio do seu site aqui
     allow_methods = ["POST", "OPTIONS"]
@@ -11,28 +10,28 @@ resource "aws_apigatewayv2_api" "lambda_api" {
   }
 }
 
-# 2. Cria o "Stage" (ambiente) da API
+
 resource "aws_apigatewayv2_stage" "lambda_stage" {
   api_id      = aws_apigatewayv2_api.lambda_api.id
   name        = "$default"
   auto_deploy = true
 }
 
-# 3. Integra a API com a sua Função Lambda
+#Integra a API com a sua Função Lambda
 resource "aws_apigatewayv2_integration" "lambda_integration" {
   api_id           = aws_apigatewayv2_api.lambda_api.id
   integration_type = "AWS_PROXY"
   integration_uri  = aws_lambda_function.cadastro_email_lambda.invoke_arn
 }
 
-# 4. Define a Rota (Endpoint) que o site vai chamar
+#Definindo Rota
 resource "aws_apigatewayv2_route" "lambda_route" {
   api_id    = aws_apigatewayv2_api.lambda_api.id
   route_key = "POST /cadastro"
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
 }
 
-# 5. Dá permissão para a API chamar a Lambda
+#Permissao para a API chamar a função lambda
 resource "aws_lambda_permission" "api_gw" {
   statement_id  = "AllowExecutionFromAPIGateway"
   action        = "lambda:InvokeFunction"
@@ -41,7 +40,6 @@ resource "aws_lambda_permission" "api_gw" {
   source_arn    = "${aws_apigatewayv2_api.lambda_api.execution_arn}/*/*"
 }
 
-# 6. Output: Mostra a URL no terminal após o apply
 output "api_url" {
   value = "${aws_apigatewayv2_api.lambda_api.api_endpoint}/cadastro"
 }

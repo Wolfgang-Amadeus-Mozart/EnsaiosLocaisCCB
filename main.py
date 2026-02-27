@@ -26,19 +26,19 @@ def enviar_email(destinatarios, mensagem_html):
         print("Erro: Credenciais de e-mail não configuradas.")
         return
 
-    # Mudança aqui: usamos MIMEMultipart para o Gmail entender que é um e-mail rico
+    # MIMEMultipart para o Gmail entender que é um e-mail rico, ou seja, poder usar sintaxe HTML e deixar o e-mail mais bonito
     msg = MIMEMultipart()
     msg['Subject'] = f"🔔 Aviso de Ensaio - {datetime.now().strftime('%d/%m/%Y')}"
     msg['From'] = f"Ensaios Guarulhos <{remetente}>"
     msg['To'] = ", ".join(destinatarios)
 
-    # Anexamos o corpo como HTML
+    # Anexando ao corpo do email
     msg.attach(MIMEText(mensagem_html, 'html'))
 
     try:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
             server.login(remetente, senha)
-            # enviamos o msg.as_string() que contém o HTML formatado
+            # enviando o msg.as_string() que contém o HTML formatado
             server.sendmail(remetente, destinatarios, msg.as_string())
         print(f"E-mail enviado com sucesso para {len(destinatarios)} pessoas!")
     except Exception as e:
@@ -53,7 +53,7 @@ def job():
     eventos_hoje = df[df['data'] == hoje]
 
     if not eventos_hoje.empty:
-        # Criamos o início do HTML
+        # inicio do html para a lista de eventos, que vai ser preenchida dinamicamente com os eventos encontrados para hoje
         lista_eventos_html = ""
         
         # Percorre cada linha de evento encontrada para hoje
