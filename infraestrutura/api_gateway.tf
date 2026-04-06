@@ -32,11 +32,11 @@ resource "aws_apigatewayv2_route" "lambda_route" {
 }
 
 #Definindo Rota para gravar numeros de telefone
-resource "aws_apigatewayv2_route" "lambda_route" {
-  api_id    = aws_apigatewayv2_api.lambda_api.id
-  route_key = "POST /cadastro-telefone"
-  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
-}
+#resource "aws_apigatewayv2_route" "lambda_route" {
+#  api_id    = aws_apigatewayv2_api.lambda_api.id
+#  route_key = "POST /cadastro-telefone"
+#  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+#}
 
 
 #Permissao para a API chamar a função lambda
