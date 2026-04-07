@@ -26,7 +26,20 @@ def buscar_emails_dynamo():
             
     return lista_emails
 
-def enviar_mensagem_whatsapp(telefone_destino, texto_resposta):
+def buscar_telefones_dynamo(table):
+    """Busca apenas os contatos do tipo 'telefone' na tabela do DynamoDB."""
+
+    response = table.scan()
+    
+    lista_telefones = []
+    # Percorre todos os itens retornados do banco
+    for item in response.get('Items', []):
+        # Filtra apenas se o 'Tipo' for 'telefone' e se o campo 'Contato' existir
+        if item.get('Tipo') == 'telefone' and item.get('Contato'):
+            lista_telefones.append(item['Contato'])
+    return lista_telefones
+
+def enviar_mensagem_whatsapp(telefone_destino, texto):
     url = f"https://graph.facebook.com/v22.0/{os.environ.get('PHONE_NUMBER_ID')}/messages"
     headers = {
         'Authorization': f'Bearer {os.environ.get("WHATSAPP_TOKEN")}',
@@ -37,7 +50,7 @@ def enviar_mensagem_whatsapp(telefone_destino, texto_resposta):
         "recipient_type"   : "individual",
         "to"               : telefone_destino,
         "type"             : "text",
-        "text"             : {"preview_url": False, "body": texto_resposta}
+        "text"             : {"preview_url": False, "body": texto}
     }
 
     data_bytes = json.dumps(payload).encode('utf-8')
