@@ -32,8 +32,10 @@ jobs:
       - name: Executar Script (E-mails)
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         env:
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          WHATSAPP_TOKEN : ${{ secrets.WHATSAPP_TOKEN }}
+          PHONE_NUMBER_ID: ${{ secrets.PHONE_NUMBER_ID }}
+          EMAIL_USER     : ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS     : ${{ secrets.EMAIL_PASS }}
         run: python main.py
       
       - name: Deploy to S3
