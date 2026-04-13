@@ -185,6 +185,7 @@ def job():
         if lista_emails:
             enviar_email(lista_emails, corpo_html)
         else:
+            #Necessário implementar emails informando que não haverá ensaios hoje
             print("Nenhum e-mail cadastrado no banco (ou nenhum do tipo 'email').")
 
 
