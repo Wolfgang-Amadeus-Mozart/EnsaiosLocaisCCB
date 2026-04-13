@@ -6,7 +6,10 @@ import uuid
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from datetime import datetime
+import logging
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 # ColdStart
 dynamodb = boto3.resource('dynamodb')
@@ -57,6 +60,9 @@ def enviar_email(destinatario, mensagem_html):
 
 
 def lambda_handler(event, context):
+
+    logger.info("Iniciando o disparo de notificações para os ensaios desta semana.")
+
     headers = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': 'https://ensaios-locais-guarulhos.filipe-deabreu.com/',
@@ -110,7 +116,7 @@ def lambda_handler(event, context):
         }
 
     except Exception as e:
-        print(f"Erro: {str(e)}")
+        logger.error(f"Erro ao cadastrar contato: {str(e)}")
         return {
             'statusCode': 500,
             'headers': headers,
