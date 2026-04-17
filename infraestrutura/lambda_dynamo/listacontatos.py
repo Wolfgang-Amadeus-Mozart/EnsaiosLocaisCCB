@@ -65,7 +65,8 @@ def lambda_handler(event, context):
     if http_method == 'GET':
         event_headers = event.get('headers', {})
         auth_header = event_headers.get('Authorization') or event_headers.get('authorization')
-        
+        logger.info(f"Header recebido: {auth_header}")
+        logger.info(f"Senha esperada: Bearer {senha_dynamo}")
         if auth_header != f'Bearer {senha_dynamo}':
             return {
                 'statusCode': 401,
