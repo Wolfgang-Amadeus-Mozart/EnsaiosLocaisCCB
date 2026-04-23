@@ -102,6 +102,12 @@ def lambda_handler(event, context):
             if not a:
                 contato = "Contato inválido"
 
+                return {
+                    'statusCode': 400,
+                    'headers': headers,
+                    'body': json.dumps('Formato de e-mail inválido.')
+                }
+
         # Grava no DynamoDB
         table.put_item(
             Item={
