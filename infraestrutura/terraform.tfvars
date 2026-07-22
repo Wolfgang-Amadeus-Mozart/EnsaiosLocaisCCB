@@ -1,5 +1,0 @@
-email_user      = "filipe.queiroz.abreu@gmail.com"
-email_pass      = "rbddyllzcvkspalx" #rbdd yllz cvks palx
-datadog_api_key = "8abef28326ebd81bdb4ba9d1b37f8269"
-datadog_app_key = "ddapp_Is8Q3E1smPCJ4siErPFVOLltLRJD36CEXp"
-senha_dynamo    = "HBFbqks0(&$9820NFOLAJ@02948nmKkjj"
