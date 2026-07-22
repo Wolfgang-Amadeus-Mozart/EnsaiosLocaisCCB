@@ -2,8 +2,8 @@ resource "aws_apigatewayv2_api" "lambda_api" {
   name          = "api-ensaios-locais"
   protocol_type = "HTTP"
 
- 
-  
+
+
   # Configuração de CORS para permitir envio de dados
   cors_configuration {
     allow_origins = ["*"]
@@ -18,10 +18,10 @@ resource "aws_apigatewayv2_stage" "lambda_stage" {
   name        = "$default"
   auto_deploy = true
 
-   # Proteção manual contra possíveis ataques DDoS, limitando o número de requisições
+  # Proteção manual contra possíveis ataques DDoS, limitando o número de requisições
   default_route_settings {
-  throttling_burst_limit = 3 # Máximo de requisições simultâneas em um pico
-  throttling_rate_limit  = 1   # Número constante de requisições por segundo (RPS)
+    throttling_burst_limit = 3 # Máximo de requisições simultâneas em um pico
+    throttling_rate_limit  = 1 # Número constante de requisições por segundo (RPS)
   }
 
 }
@@ -61,10 +61,10 @@ resource "aws_apigatewayv2_api" "lambda_api_2" {
   name          = "api-ensaios-locais-listar"
   protocol_type = "HTTP"
 
- 
-  
+
+
   cors_configuration {
-    allow_origins = ["*"] 
+    allow_origins = ["*"]
     allow_methods = ["POST", "OPTIONS"]
     allow_headers = ["content-type"]
   }
@@ -77,8 +77,8 @@ resource "aws_apigatewayv2_stage" "lambda_stage2" {
   auto_deploy = true
 
   default_route_settings {
-  throttling_burst_limit = 3 # Máximo de requisições simultâneas em um pico
-  throttling_rate_limit  = 1   # Número constante de requisições por segundo (RPS)
+    throttling_burst_limit = 3 # Máximo de requisições simultâneas em um pico
+    throttling_rate_limit  = 1 # Número constante de requisições por segundo (RPS)
   }
 }
 

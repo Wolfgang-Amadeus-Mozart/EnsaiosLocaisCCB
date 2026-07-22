@@ -28,26 +28,26 @@ resource "aws_iam_role_policy" "dynamo_write_policy" {
       ]
       Effect   = "Allow"
       Resource = "${aws_dynamodb_table.EmailsEnsaiosLocaisGuarulhos.arn}"
-    },
-    {
-      # Permite que a Lambda grave logs
-      Action = [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ]
-      Effect   = "Allow"
-      Resource = "arn:aws:logs:*:*:*"
-    },
-    {
-      #permite executa table scan
-      Action = [
-        "dynamodb:Scan"
-      ]
-      Effect   = "Allow"
-      Resource = "${aws_dynamodb_table.EmailsEnsaiosLocaisGuarulhos.arn}"
-    }
-    
+      },
+      {
+        # Permite que a Lambda grave logs
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        #permite executa table scan
+        Action = [
+          "dynamodb:Scan"
+        ]
+        Effect   = "Allow"
+        Resource = "${aws_dynamodb_table.EmailsEnsaiosLocaisGuarulhos.arn}"
+      }
+
     ]
   })
 }
